@@ -27,7 +27,7 @@ const colors = {
 };
 
 export function initDashboardCharts() {
-    // ----------------- 1. Histori Chart -----------------
+    // ----------------- 1. Histori Chart (Line) -----------------
     const historiCtx = document.getElementById('historiChart');
     if (historiCtx) {
         historiChart = new Chart(historiCtx.getContext('2d'), {
@@ -35,7 +35,7 @@ export function initDashboardCharts() {
             data: {
                 labels: historiData.years,
                 datasets: [{
-                    label: 'Orang Terdampak',
+                    label: 'People Affected',
                     data: historiData.affected,
                     borderColor: colors.teal, 
                     backgroundColor: 'rgba(14, 138, 138, 0.08)',
@@ -48,7 +48,7 @@ export function initDashboardCharts() {
                     pointRadius: 6, 
                     pointHoverRadius: 10
                 }, {
-                    label: 'Kematian', 
+                    label: 'Fatalities', 
                     data: historiData.deaths,
                     borderColor: colors.coral, 
                     backgroundColor: 'transparent',
@@ -80,7 +80,7 @@ export function initDashboardCharts() {
                             label: function(context) {
                                 let label = context.dataset.label || '';
                                 if (label) label += ': ';
-                                label += context.parsed.y.toLocaleString('id-ID');
+                                label += context.parsed.y.toLocaleString('en-US');
                                 return label;
                             }
                         }
@@ -89,14 +89,14 @@ export function initDashboardCharts() {
                 scales: {
                     y: { 
                         beginAtZero: true, 
-                        ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return v.toLocaleString('id-ID'); } }, 
+                        ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return v.toLocaleString('en-US'); } }, 
                         grid: { color: 'rgba(255,255,255,0.03)' } 
                     },
                     y1: { 
                         position: 'right', 
                         beginAtZero: true, 
                         grid: { drawOnChartArea: false }, 
-                        ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return v.toLocaleString('id-ID'); } } 
+                        ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return v.toLocaleString('en-US'); } } 
                     },
                     x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { display: false } }
                 }
@@ -112,7 +112,7 @@ export function initDashboardCharts() {
             data: {
                 labels: countryData.map(d => d.name),
                 datasets: [{
-                    label: 'Total Terdampak',
+                    label: 'Total Affected',
                     data: countryData.map(d => d.affected),
                     backgroundColor: countryData.map((d, i) => { 
                         if (i < 3) return colors.coral; 
@@ -141,9 +141,9 @@ export function initDashboardCharts() {
                             afterLabel: function(context) {
                                 const c = countryData[context.dataIndex];
                                 return [
-                                    'Kematian: ' + c.deaths.toLocaleString('id-ID'), 
-                                    'Hilang: ' + c.missing.toLocaleString('id-ID'), 
-                                    'Kerugian Ekonomi: $' + (c.economic/1000000).toFixed(1) + 'M'
+                                    'Fatalities: ' + c.deaths.toLocaleString('en-US'), 
+                                    'Missing: ' + c.missing.toLocaleString('en-US'), 
+                                    'Economic Loss: $' + (c.economic/1000000).toFixed(1) + 'M'
                                 ];
                             }
                         }
@@ -181,9 +181,9 @@ export function initDashboardCharts() {
     const climateCtx = document.getElementById('climateChart');
     if (climateCtx) {
         const climateDatasets = {
-            temperature: { label: 'Anomali Suhu (°C)', data: climateData.temperature, borderColor: colors.coral, backgroundColor: 'rgba(255,107,74,0.08)', fill: true },
-            rainfall: { label: 'Anomali Curah Hujan (%)', data: climateData.rainfall, borderColor: colors.teal, backgroundColor: 'rgba(14,138,138,0.08)', fill: true },
-            sealevel: { label: 'Anomali Muka Laut (mm)', data: climateData.sealevel, borderColor: colors.aqua, backgroundColor: 'rgba(191,231,227,0.08)', fill: true }
+            temperature: { label: 'Temperature Anomaly (°C)', data: climateData.temperature, borderColor: colors.coral, backgroundColor: 'rgba(255,107,74,0.08)', fill: true },
+            rainfall: { label: 'Precipitation Anomaly (%)', data: climateData.rainfall, borderColor: colors.teal, backgroundColor: 'rgba(14,138,138,0.08)', fill: true },
+            sealevel: { label: 'Sea Level Rise Anomaly (mm)', data: climateData.sealevel, borderColor: colors.aqua, backgroundColor: 'rgba(191,231,227,0.08)', fill: true }
         };
 
         climateChart = new Chart(climateCtx.getContext('2d'), {
@@ -222,7 +222,7 @@ export function initDashboardCharts() {
         });
     }
 
-    // ----------------- 4. Bubble Chart -----------------
+    // ----------------- 4. Bubble Chart (Affected vs Fatalities) -----------------
     const bubbleCtx = document.getElementById('bubbleChart');
     if (bubbleCtx) {
         const createBubbleData = (filterCountry) => {
@@ -244,7 +244,7 @@ export function initDashboardCharts() {
             type: 'bubble',
             data: {
                 datasets: [{
-                    label: 'Negara',
+                    label: 'Countries',
                     data: createBubbleData(),
                     backgroundColor: countryData.map((d, i) => { 
                         const o = 0.75; 
@@ -278,18 +278,18 @@ export function initDashboardCharts() {
                                 const p = context.raw;
                                 return [
                                     p.country, 
-                                    'Terdampak: ' + p.x.toLocaleString('id-ID') + ' jiwa', 
-                                    'Kematian: ' + p.y.toLocaleString('id-ID'), 
-                                    'Hilang: ' + p.missing.toLocaleString('id-ID'), 
-                                    'Kerugian Ekonomi: $' + (p.economic/1000000).toFixed(1) + 'M'
+                                    'People Affected: ' + p.x.toLocaleString('en-US'), 
+                                    'Fatalities: ' + p.y.toLocaleString('en-US'), 
+                                    'Missing: ' + p.missing.toLocaleString('en-US'), 
+                                    'Economic Loss: $' + (p.economic/1000000).toFixed(1) + 'M'
                                 ];
                             }
                         }
                     }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'Total Orang Terdampak', color: 'rgba(255,255,255,0.5)' }, ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return (v/1000000).toFixed(1) + 'M'; } }, grid: { color: 'rgba(255,255,255,0.03)' } },
-                    y: { title: { display: true, text: 'Total Kematian', color: 'rgba(255,255,255,0.5)' }, ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.03)' } }
+                    x: { title: { display: true, text: 'Total People Affected', color: 'rgba(255,255,255,0.5)' }, ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return (v/1000000).toFixed(1) + 'M'; } }, grid: { color: 'rgba(255,255,255,0.03)' } },
+                    y: { title: { display: true, text: 'Total Fatalities', color: 'rgba(255,255,255,0.5)' }, ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.03)' } }
                 }
             }
         });
@@ -311,7 +311,7 @@ export function initDashboardCharts() {
             data: {
                 labels: countryData.map(d => d.name),
                 datasets: [{
-                    label: 'Kerugian Ekonomi (USD)',
+                    label: 'Economic Loss (USD)',
                     data: countryData.map(d => d.economic),
                     backgroundColor: countryData.map((d, i) => { 
                         if (i === 0) return colors.gold; 
@@ -335,7 +335,7 @@ export function initDashboardCharts() {
                         cornerRadius: 12, 
                         borderColor: 'rgba(255,255,255,0.1)', 
                         borderWidth: 1, 
-                        callbacks: { label: function(c) { return 'Kerugian: $' + (c.parsed.y/1000000).toFixed(1) + ' juta'; } } 
+                        callbacks: { label: function(c) { return 'Losses: $' + (c.parsed.y/1000000).toFixed(1) + ' Million'; } } 
                     }
                 },
                 scales: {
@@ -354,7 +354,7 @@ export function initDashboardCharts() {
             data: {
                 labels: populationData.years,
                 datasets: [{
-                    label: 'Populasi Pasifik (ribu)', 
+                    label: 'Pacific Population (thousands)', 
                     data: populationData.population,
                     borderColor: colors.teal, 
                     backgroundColor: 'rgba(14,138,138,0.08)',
@@ -363,7 +363,7 @@ export function initDashboardCharts() {
                     tension: 0.4, 
                     yAxisID: 'y'
                 }, {
-                    label: 'Orang Terdampak', 
+                    label: 'People Affected', 
                     data: historiData.affected,
                     borderColor: colors.coral, 
                     backgroundColor: 'transparent',
@@ -392,13 +392,13 @@ export function initDashboardCharts() {
                 scales: {
                     y: { 
                         position: 'left', 
-                        title: { display: true, text: 'Populasi (ribu)', color: 'rgba(255,255,255,0.5)' }, 
+                        title: { display: true, text: 'Population (thousands)', color: 'rgba(255,255,255,0.5)' }, 
                         ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return v + 'k'; } }, 
                         grid: { color: 'rgba(255,255,255,0.03)' } 
                     },
                     y1: { 
                         position: 'right', 
-                        title: { display: true, text: 'Orang Terdampak', color: 'rgba(255,255,255,0.5)' }, 
+                        title: { display: true, text: 'People Affected', color: 'rgba(255,255,255,0.5)' }, 
                         grid: { drawOnChartArea: false }, 
                         ticks: { color: 'rgba(255,255,255,0.5)', callback: function(v) { return (v/1000).toFixed(0) + 'k'; } } 
                     },
@@ -416,7 +416,7 @@ export function initDashboardCharts() {
             data: {
                 labels: drrData.map(d => d.country),
                 datasets: [{
-                    label: 'Pemerintah Lokal dengan Strategi DRR (%)',
+                    label: 'Local Govts with DRR Blueprint (%)',
                     data: drrData.map(d => d.value),
                     backgroundColor: drrData.map((d) => { 
                         if (d.value >= 80) return colors.green; 
@@ -440,7 +440,7 @@ export function initDashboardCharts() {
                         cornerRadius: 12, 
                         borderColor: 'rgba(255,255,255,0.1)', 
                         borderWidth: 1, 
-                        callbacks: { label: function(c) { return c.parsed.y + '% pemerintah lokal dengan strategi DRR'; } } 
+                        callbacks: { label: function(c) { return c.parsed.y + '% local governments with DRR blueprints'; } } 
                     }
                 },
                 scales: {
@@ -467,28 +467,28 @@ export function updateStoryPanel(countryName) {
     
     // Update Stats panel
     document.getElementById('storyStats').innerHTML = `
-        <div class="story-stat"><div class="story-stat-icon">👥</div><div class="story-stat-value">${country.affected.toLocaleString('id-ID')}</div><div class="story-stat-label">Orang Terdampak</div></div>
-        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.coral}">💀</div><div class="story-stat-value" style="color:${colors.coral}">${country.deaths.toLocaleString('id-ID')}</div><div class="story-stat-label">Kematian</div></div>
-        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.teal}">❓</div><div class="story-stat-value" style="color:${colors.teal}">${country.missing.toLocaleString('id-ID')}</div><div class="story-stat-label">Orang Hilang</div></div>
-        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.gold}">💰</div><div class="story-stat-value" style="color:${colors.gold}">$${(country.economic/1000000).toFixed(1)}M</div><div class="story-stat-label">Kerugian Ekonomi</div></div>
+        <div class="story-stat"><div class="story-stat-icon">👥</div><div class="story-stat-value">${country.affected.toLocaleString('en-US')}</div><div class="story-stat-label">People Affected</div></div>
+        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.coral}">💀</div><div class="story-stat-value" style="color:${colors.coral}">${country.deaths.toLocaleString('en-US')}</div><div class="story-stat-label">Fatalities</div></div>
+        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.teal}">❓</div><div class="story-stat-value" style="color:${colors.teal}">${country.missing.toLocaleString('en-US')}</div><div class="story-stat-label">Missing Persons</div></div>
+        <div class="story-stat"><div class="story-stat-icon" style="color:${colors.gold}">💰</div><div class="story-stat-value" style="color:${colors.gold}">$${(country.economic/1000000).toFixed(1)}M</div><div class="story-stat-label">Economic Loss</div></div>
     `;
 
     // Formulate descriptive narrative insight
     let insight = '';
     if (country.affected > 500000 && country.economic < 200000000) {
-        insight = `${countryName} memiliki tingkat populasi terdampak bencana yang sangat tinggi secara kumulatif. Namun, pencatatan kerugian ekonomi riil masih relatif terbatas. Fokus rekonstruksi sosial dan pemulihan komunitas adat menjadi prioritas kemanusiaan tertinggi. `;
+        insight = `${countryName} exhibits a disproportionately high cumulative number of affected citizens relative to documented economic losses. This indicates that while financial assets may be limited, human vulnerability is extreme. Humanitarian priority should focus on local community recovery and traditional social safety nets. `;
     } else if (country.economic > 100000000) {
-        insight = `${countryName} menanggung kerugian ekonomi infrastruktur yang luar biasa tinggi akibat siklon berulang. Perlunya menyeimbangkan alokasi dana darurat dengan investasi adaptasi berkelanjutan untuk memitigasi depresiasi nilai PDB negara di masa depan. `;
+        insight = `${countryName} bears a staggering financial burden due to severe damage to infrastructure, agriculture, and tourism from recurring cyclones. It is critical to balance emergency response spending with proactive infrastructure fortification to mitigate the long-term erosion of sovereign GDP. `;
     } else if (country.deaths > 500) {
-        insight = `Tingginya angka fatalitas di ${countryName} menunjukkan kerentanan mendalam pada sistem evakuasi darurat lokal. Fokus utama jangka pendek wajib ditekankan pada modernisasi stasiun meteorologi dan integrasi alarm bahaya dini di desa pesisir. `;
+        insight = `The high disaster-related mortality rates in ${countryName} point to severe vulnerabilities in emergency evacuation infrastructure and early warning dissemination. Immediate policy focus must prioritize modernizing meteorological telemetry and integrating warning sirens in remote communities. `;
     } else {
-        insight = `Dampak kumulatif bencana di ${countryName} menunjukkan tren peningkatan kerentanan yang konsisten. Ketergantungan ekonomi lokal pada sektor kelautan memerlukan strategi perlindungan berlapis terhadap ekosistem pesisir. `;
+        insight = `Disaster trends in ${countryName} reveal a consistent expansion of vulnerability. The dependency of the local economy on marine ecosystems and coastal settlements demands multi-layered, nature-based adaptation strategies along the shoreline. `;
     }
 
     if (drr.hasData) {
-        insight += `Berdasarkan data Sendhai Framework: <strong>${drr.value}%</strong> pemerintah lokal di ${countryName} telah mengadopsi rancangan strategis mitigasi pengurangan risiko bencana (DRR) di tingkat regional.`;
+        insight += `According to Sendai Framework reports, <strong>${drr.value}%</strong> of local governments in ${countryName} have formally adopted and implemented localized Disaster Risk Reduction (DRR) strategies.`;
     } else {
-        insight += `Sangat disayangkan, data kesiapan strategi mitigasi bencana (DRR) <strong>belum dilaporkan / belum terdata</strong> secara lengkap untuk ${countryName}. Celah pelaporan data ini harus segera diperbaiki demi kelayakan dana adaptasi global.`;
+        insight += `Regrettably, local Disaster Risk Reduction (DRR) strategy implementation data <strong>has not been reported</strong> for ${countryName}. Closing this reporting gap is essential for accessing international climate finance and adaptation grants.`;
     }
     
     document.getElementById('storyInsight').innerHTML = insight;
@@ -505,14 +505,14 @@ export function updateStoryPanel(countryName) {
             data: {
                 labels: historiData.years,
                 datasets: [{
-                    label: 'Orang Terdampak', 
+                    label: 'People Affected', 
                     data: yearly.affected,
                     borderColor: colors.teal, 
                     backgroundColor: 'rgba(14,138,138,0.06)', 
                     fill: true, 
                     tension: 0.4
                 }, {
-                    label: 'Kematian', 
+                    label: 'Fatalities', 
                     data: yearly.deaths,
                     borderColor: colors.coral, 
                     backgroundColor: 'transparent', 
@@ -545,7 +545,7 @@ export function updateStoryPanel(countryName) {
     }
 }
 
-// ----------------- 9. Custom Smooth Scrolling & Cursor Init -----------------
+// ----------------- 9. Custom Smooth Scrolling & Events Init -----------------
 export function initDashboardCore(lenisInstance) {
     // OPTIMIZED Magnetic Hover (Prevents Layout Thrashing by caching getBoundingClientRect)
     const magneticElements = document.querySelectorAll('.hero-stat, .chapter-card, .insight-card');
@@ -558,7 +558,6 @@ export function initDashboardCore(lenisInstance) {
             if (!rect) return;
             const x = e.clientX - rect.left - rect.width / 2;
             const y = e.clientY - rect.top - rect.height / 2;
-            // hardware accelerated translate3d
             el.style.transform = `translate3d(${x * 0.08}px, ${y * 0.08}px, 0) scale(1.02)`;
         });
         el.addEventListener('mouseleave', () => {
