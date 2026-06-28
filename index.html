@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacific Under Pressure — Kisah Bencana, Iklim & Ketahanan</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Heavy Libraries loaded asynchronously / via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+</head>
+<body>
+    <!-- Custom Cursor Removed for Browser Default Navigation -->
+    
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+    
+    <!-- Navigation Indicator (Right Sidebar) -->
+    <div class="page-indicator" id="pageIndicator">
+        <div class="page-dot active" data-target="hero" data-label="Beranda"></div>
+        <div class="page-dot" data-target="prolog" data-label="Prolog"></div>
+        <div class="page-dot" data-target="bab1" data-label="Bab 1: Tren"></div>
+        <div class="page-dot" data-target="bab2" data-label="Bab 2: Geografi"></div>
+        <div class="page-dot" data-target="bab3" data-label="Bab 3: Iklim"></div>
+        <div class="page-dot" data-target="bab4" data-label="Bab 4: Kemanusiaan"></div>
+        <div class="page-dot" data-target="bab5" data-label="Bab 5: Ekonomi"></div>
+        <div class="page-dot" data-target="bab6" data-label="Bab 6: Kesiapan"></div>
+        <div class="page-dot" data-target="bab7" data-label="Bab 7: Spotlight"></div>
+        <div class="page-dot" data-target="epilog" data-label="Epilog"></div>
+    </div>
+    
+    <!-- Loading Screen Overlay -->
+    <div class="loading-overlay" id="loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Navigasi Pasifik</div>
+        <div class="loader-sub">Mengumpulkan data bencana, iklim, dan ketahanan kepulauan</div>
+    </div>
+    
+    <script>
+        // Fail-safe loader timeout: always hide loading overlay after 2.5 seconds maximum,
+        // even if a CDN script fails to load or a JS runtime error occurs.
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader && !loader.classList.contains('hidden')) {
+                loader.classList.add('hidden');
+                console.warn("Loader hidden via fail-safe timeout. There might be CDN loading delays or Javascript initialization errors. Press F12 to check Console.");
+            }
+        }, 2500);
+    </script>
+    
+    <!-- Sticky Header Navigation -->
+    <nav id="navbar">
+        <div class="nav-logo">
+            <span class="wave-icon">🌊</span>Pacific Under Pressure
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">Beranda</a></li>
+            <li><a href="#prolog">Prolog</a></li>
+            <li><a href="#bab1">Tren</a></li>
+            <li><a href="#bab2">Geografi</a></li>
+            <li><a href="#bab3">Iklim</a></li>
+            <li><a href="#bab4">Manusia</a></li>
+            <li><a href="#bab5">Ekonomi</a></li>
+            <li><a href="#bab6">Kesiapan</a></li>
+            <li><a href="#bab7">Spotlight</a></li>
+            <li><a href="#epilog">Epilog</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO HEADER: 3D Ocean Visuals -->
+    <section class="hero" id="hero">
+        <canvas id="hero-3d-canvas"></canvas>
+        <div class="hero-vignette"></div>
+        <div class="hero-content">
+            <p class="hero-eyebrow">Pacific DataViz Challenge 2026</p>
+            <h1 class="hero-title">Pacific Under<br><span class="accent">Pressure</span></h1>
+            <p class="hero-subtitle">Catatan Kebencanaan, Krisis Iklim, dan Narasi Ketahanan Masyarakat Kepulauan Pasifik dari 2005 hingga 2023. Di balik garis grafik, terdapat pulau yang terancam tenggelam, rumah yang porak-poranda, dan perjuangan manusia yang tak kunjung padam.</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-icon">👥</div>
+                    <span class="hero-stat-num" data-target="2588223">0</span>
+                    <div class="hero-stat-label">Orang Terdampak</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-icon">💀</div>
+                    <span class="hero-stat-num coral" data-target="3802">0</span>
+                    <div class="hero-stat-label">Kematian</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-icon">❓</div>
+                    <span class="hero-stat-num teal" data-target="114">0</span>
+                    <div class="hero-stat-label">Orang Hilang</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-icon">💰</div>
+                    <span class="hero-stat-num gold" data-target="856600000">0</span>
+                    <div class="hero-stat-label">Kerugian (USD)</div>
+                </div>
+            </div>
+            
+            <div class="hero-quote">Di balik angka bencana, ada masyarakat pulau yang terus beradaptasi dengan risiko yang berulang. Setiap gelombang yang datang membawa pelajaran, dan setiap badai meninggalkan jejak ketahanan.</div>
+        </div>
+        <div class="scroll-hint">
+            <span>Gulir untuk menjelajah</span>
+            <div class="scroll-hint-line"></div>
+        </div>
+    </section>
+
+    <!-- PROLOGUE: Editorial Introduction -->
+    <section class="story-section" id="prolog">
+        <div class="story-header">
+            <span class="story-eyebrow">Prolog</span>
+            <h2 class="story-title">Ketika Samudra Menuntut Keadilan</h2>
+            <p class="story-narrative">Sejak berabad-adjat, gugusan pulau di Samudra Pasifik berdiri tegak di tengah bentangan air terdalam di dunia. Masyarakat adat hidup selaras dengan siklus alam. Namun, dalam dua dekade terakhir, siklus tersebut rusak. Pemanasan global mengubah samudra yang menghidupi mereka menjadi ancaman eksistensial. Dasbor ini merangkum rentetan malapetaka tersebut ke dalam metrik visual—sebagai pengingat bahwa perubahan iklim bukanlah ramalan masa depan, melainkan kenyataan pahit yang dihadapi hari ini.</p>
+        </div>
+        
+        <div class="chapter-grid">
+            <div class="chapter-card tilt-3d">
+                <div class="chapter-num">01</div>
+                <div class="chapter-icon">🌊</div>
+                <h3 class="chapter-title">Lautan dan Ruang Hidup</h3>
+                <p class="chapter-desc">Kepulauan Pasifik membentang di atas samudra terbesar di bumi. Lautan adalah rahim budaya sekaligus palung bencana terbesar di abad modern.</p>
+            </div>
+            <div class="chapter-card tilt-3d">
+                <div class="chapter-num">02</div>
+                <div class="chapter-icon">🌡️</div>
+                <h3 class="chapter-title">Krisis Iklim Eksistensial</h3>
+                <p class="chapter-desc">Pemanasan suhu air laut mempercepat intensitas badai monster. Pesisir Pasifik menjadi barometer langsung dari kepunahan ekologi global.</p>
+            </div>
+            <div class="chapter-card tilt-3d">
+                <div class="chapter-num">03</div>
+                <div class="chapter-icon">💪</div>
+                <h3 class="chapter-title">Ketahanan dan Kedaulatan</h3>
+                <p class="chapter-desc">Tiap pemulihan adalah kemenangan kecil atas ancaman global. Pertanyaannya: sampai kapan batas adaptasi fisik mereka mampu menandingi laju abrasi laut?</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARALLAX WIDGET 1 -->
+    <div class="parallax-section">
+        <div class="parallax-bg" style="background: linear-gradient(135deg, #031c26, #06384a, #0E8A8A);"></div>
+        <div class="parallax-overlay"></div>
+        <div class="parallax-text">
+            <div class="parallax-stat">2.588.223</div>
+            <h2>Jiwa yang Tercatat</h2>
+            <p>Tapi berapa banyak lagi yang tidak tercatat? Berapa banyak cerita yang terkubur bersama puing-puing rumah?</p>
+        </div>
+    </div>
+
+    <!-- BAB 1: Histori Bencana (2005-2023) -->
+    <section class="story-section" id="bab1">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 1 — Rentang Waktu</span>
+            <h2 class="story-title">Dua Dekade Badai yang Menolak Reda</h2>
+            <p class="story-narrative">Dari tahun 2005 hingga 2023, wilayah Pasifik didera anomali cuaca ekstrem secara beruntun. Garis waktu kebencanaan di bawah menunjukkan bagaimana badai katastrofe datang silih berganti, menyisakan masa pemulihan yang semakin sempit bagi masyarakat kepulauan.</p>
+        </div>
+        
+        <div class="highlight-box">
+            <strong>Titik Lonjakan Kritis:</strong> Tahun 2016 mencatat 733.906 orang terdampak — tahun terburuk dalam sejarah modern Kepulauan Pasifik. Siklon Winston menghancurkan Fiji, membuat 40% populasi negara itu kehilangan rumah dalam satu malam.
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area large">
+                <canvas id="historiChart"></canvas>
+            </div>
+            <p class="source-note">Pacific Data Hub / SDG 11.5.1 — Jumlah orang yang terkena dampak langsung akibat bencana (2005-2023)</p>
+        </div>
+
+        <!-- Interactive Scrolly Timeline -->
+        <div class="history-timeline">
+            <div class="history-item">
+                <div class="history-content">
+                    <div class="history-year">2005</div>
+                    <div class="history-event">Permulaan Pengamatan</div>
+                    <div class="history-desc">Sistem monitoring bencana mulai terstandarisasi di wilayah Pasifik. Data awal menunjukkan 45.000 orang terdampak — angka yang saat itu sudah dianggap besar.</div>
+                    <span class="history-stat">45.000 jiwa terdampak</span>
+                </div>
+                <div class="history-dot"></div>
+                <div style="width:44%"></div>
+            </div>
+            <div class="history-item">
+                <div style="width:44%"></div>
+                <div class="history-dot"></div>
+                <div class="history-content">
+                    <div class="history-year">2016</div>
+                    <div class="history-event">Siklon Winston</div>
+                    <div class="history-desc">Siklon tropis kategori 5 menghantam Fiji. 733.906 orang terdampak. 44 tewas. Kerugian ekonomi mencapai 1,4 miliar USD. Ini adalah badai terkuat yang pernah tercatat di Belahan Bumi Selatan.</div>
+                    <span class="history-stat">733.906 terdampak | 44 tewas</span>
+                </div>
+            </div>
+            <div class="history-item">
+                <div class="history-content">
+                    <div class="history-year">2018</div>
+                    <div class="history-event">Siklon Gita &amp; Banjir</div>
+                    <div class="history-desc">Tonga dan Samoa dilanda siklon Gita. Vanuatu mengalami banjir besar. 462.927 orang terdampak di seluruh wilayah. Pola cuaca ekstrem mulai menjadi norma.</div>
+                    <span class="history-stat">462.927 jiwa terdampak</span>
+                </div>
+                <div class="history-dot"></div>
+                <div style="width:44%"></div>
+            </div>
+            <div class="history-item">
+                <div style="width:44%"></div>
+                <div class="history-dot"></div>
+                <div class="history-content">
+                    <div class="history-year">2020</div>
+                    <div class="history-event">Siklon Yasa &amp; COVID-19</div>
+                    <div class="history-desc">Di tengah pandemi COVID-19, siklon Yasa menghantam Fiji. 548.988 orang terdampak. Sistem kesehatan yang sudah terbebani pandemi harus menangani evakuasi massal.</div>
+                    <span class="history-stat">548.988 terdampak | 4 tewas</span>
+                </div>
+            </div>
+            <div class="history-item">
+                <div class="history-content">
+                    <div class="history-year">2023</div>
+                    <div class="history-event">Refleksi &amp; Peringatan</div>
+                    <div class="history-desc">19 tahun data mengajarkan kita bahwa bencana di Pasifik bukan "jika", melainkan "kapan". Pertanyaannya sekarang: seberapa siap kita untuk yang berikutnya?</div>
+                    <span class="history-stat">Total: 2.588.223 jiwa terdampak</span>
+                </div>
+                <div class="history-dot"></div>
+                <div style="width:44%"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAB 2: Geografi & Negara Terdampak -->
+    <section class="story-section" id="bab2">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 2 — Geografi Kerentanan</span>
+            <h2 class="story-title">Menakar Dampak Spasial Wilayah</h2>
+            <p class="story-narrative">Kerusakan tidak terbagi rata di seluruh penjuru samudra. Gugusan pulau di Melanesia menanggung hantaman terberat akibat kepadatan populasi dan letak geografis yang berada di jalur lintasan siklon utama. Peta di bawah menggambarkan sebaran risiko tersebut secara spasial.</p>
+        </div>
+
+        <!-- NEW OPTIMIZED INTERACTIVE SVG MAP -->
+        <div class="map-section-wrap">
+            <h3 class="section-subtitle">Peta Navigasi Spasial Kepulauan Pasifik</h3>
+            <p class="section-desc">Pilih dimensi analisis di bawah ini untuk melihat distribusi spasial dampak secara dinamis, klik node pulau untuk memicu sorotan data wilayah.</p>
+            <div class="map-modes-toggle">
+                <button class="map-mode-btn active" data-mode="affected">👤 Korban Manusia</button>
+                <button class="map-mode-btn" data-mode="economic">💰 Kerugian Ekonomi</button>
+                <button class="map-mode-btn" data-mode="climate">🌡️ Kerentanan Iklim Atoll</button>
+            </div>
+            <div id="pacific-svg-map-container"></div>
+        </div>
+
+        <div class="dropdown-wrap">
+            <select class="styled-select" id="subregionFilter">
+                <option value="all">🌐 Semua Subregion</option>
+                <option value="Melanesia">🌴 Melanesia</option>
+                <option value="Micronesia">🌸 Micronesia</option>
+                <option value="Polynesia">🌺 Polynesia</option>
+            </select>
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area large">
+                <canvas id="negaraChart"></canvas>
+            </div>
+            <p class="source-note">Pacific Data Hub / SDG 11.5.1 — Akumulasi korban terdampak langsung berdasarkan negara (2005-2023)</p>
+        </div>
+        
+        <div class="highlight-box coral">
+            <strong>Melanesia memikul beban terbesar:</strong> Fiji mencatat 1.240.734 orang terdampak (48% dari seluruh Pasifik), diikuti Solomon Islands (22%) dan Vanuatu (11%). Topografi bergunung yang padat dengan pemukiman lembah sungai membuat Melanesia sangat rentan terhadap banjir bandang masif.
+        </div>
+    </section>
+
+    <!-- BAB 3: Anomali Iklim -->
+    <section class="story-section-dark" id="bab3">
+        <div class="story-section">
+            <div class="story-header">
+                <span class="story-eyebrow">Bab 3 — Katalis Ekologis</span>
+                <h2 class="story-title">Iklim: Saat Suhu Laut Memicu Amukan Badai</h2>
+                <p class="story-narrative">Bencana tidak lahir dari ruang hampa. Meningkatnya anomali suhu air laut memicu pembentukan tekanan udara rendah yang melahirkan siklon monster. Kenaikan muka laut secara perlahan namun pasti menelan daratan subur, merusak ketahanan pangan lokal.</p>
+            </div>
+            
+            <div class="toggle-wrap">
+                <button class="toggle-chip active" data-chart="temperature">🌡️ Suhu Permukaan</button>
+                <button class="toggle-chip" data-chart="rainfall">🌧️ Curah Hujan</button>
+                <button class="toggle-chip" data-chart="sealevel">🌊 Muka Laut</button>
+            </div>
+            
+            <div class="chart-wrap">
+                <div class="chart-area large">
+                    <canvas id="climateChart"></canvas>
+                </div>
+                <p class="source-note">Pacific Data Hub — Indikator Fisik Perubahan Iklim Global (2005-2023)</p>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>Pola Esktremitas:</strong> Anomali suhu permukaan laut melonjak hingga +1.15°C pada tahun 2023. Bersamaan dengan kenaikan muka air laut kumulatif sebesar 92 mm, energi termal di atmosfer memperkuat sirkulasi angin siklon sebesar 3-5% untuk setiap derajat kenaikan suhu.
+            </div>
+        </div>
+    </section>
+
+    <!-- BAB 4: Dampak Manusia (Fatalitas vs Terdampak) -->
+    <section class="story-section" id="bab4">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 4 — Kemanusiaan</span>
+            <h2 class="story-title">Antara Kehilangan Nyawa dan Kesiapan Evakuasi</h2>
+            <p class="story-narrative">Sebuah paradoks nyata terjadi di Pasifik: wilayah dengan jumlah penduduk terdampak terbanyak tidak selalu memiliki angka kematian tertinggi. Hal ini membuktikan bahwa investasi pada sistem peringatan dini dan jalur evakuasi yang inklusif adalah dinding pertahanan antara hidup dan mati.</p>
+        </div>
+        
+        <div class="dropdown-wrap">
+            <select class="styled-select" id="bubbleFilter">
+                <option value="all">Semua Negara</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Samoa">Samoa</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Palau">Palau</option>
+            </select>
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area large">
+                <canvas id="bubbleChart"></canvas>
+            </div>
+            <p class="source-note">Pacific Data Hub / SDG 11.5.1 — Distribusi perbandingan: Terdampak vs Kematian vs Orang Hilang (Diameter bola = jumlah orang hilang)</p>
+        </div>
+        
+        <div class="highlight-box">
+            <strong>Analisis Kritis:</strong> Papua Nugini mencatat mortalitas bencana tertinggi (1.200 jiwa) dengan rasio kematian 1.21%. Sebaliknya, Fiji dengan angka terdampak 12 kali lipat lebih besar mampu menekan rasio kematian di tingkat 0.05% berkat rantai mitigasi kebencanaan sipil yang lebih responsif.
+        </div>
+    </section>
+
+    <!-- STATISTICS STATISTICS COUNTER WIDGET -->
+    <div class="counter-section">
+        <div class="counter-grid">
+            <div class="counter-item">
+                <div class="counter-value" data-target="19">0</div>
+                <div class="counter-label">Tahun Pengamatan</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value" data-target="12">0</div>
+                <div class="counter-label">Negara Kepulauan</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value" data-target="3">0</div>
+                <div class="counter-label">Grup Subregion</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-value" data-target="5">0</div>
+                <div class="counter-label">Indikator Terpadu</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAB 5: Dampak Ekonomi -->
+    <section class="story-section" id="bab5">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 5 — Ekonomi</span>
+            <h2 class="story-title">Kerugian Finansial: Ketika Masa Depan Tergadaikan oleh Badai</h2>
+            <p class="story-narrative">Kehancuran fisik akibat bencana melumpuhkan pilar ekonomi makro kepulauan kecil. Biaya rekonstruksi bangunan, rehabilitasi pertanian, dan perbaikan infrastruktur energi sering kali menghapus pertumbuhan ekonomi bertahun-tahun dalam hitungan jam.</p>
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area large">
+                <canvas id="ekonomiChart"></canvas>
+            </div>
+            <p class="source-note">Pacific Data Hub / SDG 11.5.2 — Kerugian ekonomi langsung akibat bencana alam dalam USD</p>
+        </div>
+        
+        <div class="highlight-box gold">
+            <strong>Kerugian Skala Makro:</strong> Fiji menderita kerugian finansial akumulatif tertinggi (~$616.9 juta), setara dengan 13.7% dari total Produk Domestik Bruto (PDB). Kerusakan parah pada pelabuhan, perkebunan kopra, dan resor wisata memutus rantai pasokan devisa utama.
+        </div>
+    </section>
+
+    <!-- BAB 6: Populasi & Strategi Mitigasi (Kesiapan) -->
+    <section class="story-section" id="bab6">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 6 — Kesiapsiagaan</span>
+            <h2 class="story-title">Populasi yang Tumbuh di Tengah Dekapan Bahaya</h2>
+            <p class="story-narrative">Ketika laju demografi Pasifik merangkak naik, jumlah jiwa yang terpapar risiko bencana berlipat ganda. Di tengah ancaman yang nyata ini, masih terdapat jurang pemisah besar antara pertumbuhan penduduk dengan komitmen regulasi mitigasi risiko bencana (DRR) di tingkat lokal.</p>
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area">
+                <canvas id="populasiChart"></canvas>
+            </div>
+            <p class="source-note">Pacific Data Hub — Korelasi Pertumbuhan Populasi (NMDI0002) vs Orang Terdampak</p>
+        </div>
+        
+        <div class="chart-wrap">
+            <div class="chart-area">
+                <canvas id="kesiapanChart"></canvas>
+            </div>
+            <p class="source-note">UNDRR / Sendai Framework Monitor — SDG 11.b.2 (Persentase pemerintah lokal dengan cetak biru strategi DRR)</p>
+        </div>
+        
+        <div class="highlight-box green">
+            <strong>Paradoks Strategi:</strong> Populasi total Pasifik meningkat 31.8% dalam dua dekade terakhir. Kendati demikian, 4 dari 5 negara dengan tingkat terdampak bencana terbesar (Fiji, Solomons, PNG, Micronesia) <strong>belum melaporkan</strong> strategi mitigasi bencana lokal ke PBB secara formal.
+        </div>
+    </section>
+
+    <!-- PARALLAX WIDGET 2 -->
+    <div class="parallax-section">
+        <div class="parallax-bg" style="background: linear-gradient(135deg, #021219, #031c26, #06384a);"></div>
+        <div class="parallax-overlay"></div>
+        <div class="parallax-text">
+            <h2>"Lautan tidak pernah tidur.<br>Dan kita pun tidak boleh."</h2>
+            <p style="margin-top: 2rem;">Dedikasi untuk 2.588.223 jiwa yang terdampak,<br>dan ketahanan mereka yang tiada henti.</p>
+        </div>
+    </div>
+
+    <!-- BAB 7: Cerita Negara Spotlight (Map Linked) -->
+    <section class="story-section" id="bab7">
+        <div class="story-header">
+            <span class="story-eyebrow">Bab 7 — Profil Khusus</span>
+            <h2 class="story-title">Menyusuri Jejak Ketahanan Pulau demi Pulau</h2>
+            <p class="story-narrative">Setiap wilayah memiliki topografi kerentanan yang khas. Pilih negara melalui menu di bawah atau klik langsung lingkaran pulau pada peta interaktif di Bab 2 untuk mendalami dinamika historis dan analisis kritis di setiap wilayah.</p>
+        </div>
+        
+        <div class="dropdown-wrap">
+            <select class="styled-select" id="countryStorySelect">
+                <option value="Fiji">🇫🇯 Fiji</option>
+                <option value="Solomon Islands">🇸🇧 Solomon Islands</option>
+                <option value="Vanuatu">🇻🇺 Vanuatu</option>
+                <option value="Marshall Islands">🇲🇭 Marshall Islands</option>
+                <option value="Papua New Guinea">🇵🇬 Papua New Guinea</option>
+                <option value="Tonga">🇹🇴 Tonga</option>
+                <option value="Samoa">🇼🇸 Samoa</option>
+                <option value="Micronesia">🇫🇲 Micronesia</option>
+                <option value="Palau">🇵🇼 Palau</option>
+                <option value="Nauru">🇳🇷 Nauru</option>
+                <option value="Tuvalu">🇹🇻 Tuvalu</option>
+                <option value="Kiribati">🇰🇮 Kiribati</option>
+            </select>
+        </div>
+        
+        <div class="story-panel" id="storyPanel">
+            <div class="story-panel-header">
+                <div class="story-header">
+                    <div class="story-flag" id="storyFlag">🇫🇯</div>
+                    <div>
+                        <h3 class="story-name" id="storyCountryName">Fiji</h3>
+                        <span class="story-subregion" id="storySubregion">Melanesia</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="story-grid" id="storyStats">
+                <!-- Injected Dynamically by dashboard.js -->
+            </div>
+            
+            <div class="chart-area" style="margin: 3rem 0;">
+                <canvas id="storyTrendChart"></canvas>
+            </div>
+            
+            <div class="story-insight" id="storyInsight">
+                <!-- Injected Dynamically by dashboard.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- EPILOGUE: Lessons learned -->
+    <section class="story-section" id="epilog">
+        <div class="story-header">
+            <span class="story-eyebrow">Epilog</span>
+            <h2 class="story-title">Lima Pelajaran dari Garis Pantai Pasifik</h2>
+            <p class="story-narrative">Dari rekaman data sepanjang 19 tahun, kita ditarik pada kesimpulan bahwa Pasifik adalah laboratorium hidup perubahan iklim global. Berikut adalah lima catatan reflektif yang harus menjadi landasan aksi mitigasi bersama.</p>
+        </div>
+        
+        <div class="insights-grid">
+            <div class="insight-card tilt-3d">
+                <div class="insight-number">2.5J+</div>
+                <p class="insight-text">Lebih dari 2,5 juta jiwa terdampak langsung. Ini setara dengan seperempat populasi total Pasifik. Di balik grafik garis, terdapat krisis tempat tinggal, sanitasi, dan hilangnya akses air bersih bagi jutaan keluarga.</p>
+            </div>
+            <div class="insight-card tilt-3d">
+                <div class="insight-number">#1</div>
+                <p class="insight-text">Fiji menderita total kerugian ekonomi dan paparan jiwa tertinggi. Walau demikian, pemeliharaan mitigasi terstruktur sukses meminimalisir angka fatalitas di batas paling aman.</p>
+            </div>
+            <div class="insight-card tilt-3d">
+                <div class="insight-number">PNG</div>
+                <p class="insight-text">Papua Nugini mencatat fatalitas terbesar (1.200 korban meninggal). Hal ini menegaskan pentingnya desentralisasi pembangunan pos kesehatan penanggulangan hingga ke area pegunungan terpencil.</p>
+            </div>
+            <div class="insight-card tilt-3d">
+                <div class="insight-number">Siklon</div>
+                <p class="insight-text">Tahun 2016, 2018, dan 2020 adalah lonjakan badai ekstrem terbesar. Fenomena ini membuktikan bahwa pemanasan iklim global secara nyata meningkatkan daya destruktif siklon tropis.</p>
+            </div>
+            <div class="insight-card tilt-3d">
+                <div class="insight-number">DRR</div>
+                <p class="insight-text">Ketersediaan cetak biru regulasi DRR adalah penentu ketahanan jangka panjang. Negara-negara besar Pasifik harus membenahi pengarsipan strategi DRR regional mereka.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL PARALLAX -->
+    <div class="parallax-section" style="height: 50vh;">
+        <div class="parallax-bg" style="background: linear-gradient(135deg, #06384a, #031c26, #020f14);"></div>
+        <div class="parallax-overlay"></div>
+        <div class="parallax-text">
+            <h2 style="font-size: clamp(1.5rem, 3.5vw, 2.5rem);">"Data adalah cara kita menghormati<br>mereka yang bertahan."</h2>
+            <p style="margin-top: 1.5rem; font-size: 0.95rem;">Pacific DataViz Challenge 2026</p>
+        </div>
+    </div>
+
+    <!-- FOOTER REFERENCES -->
+    <footer>
+        <div class="footer-content">
+            <h3 class="footer-title">Sumber Data &amp; Referensi</h3>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Kompetisi</h4>
+                    <a href="https://pacificdatavizchallenge.org/" target="_blank">Pacific DataViz Challenge 2026</a>
+                    <a href="https://pacificdata.org/" target="_blank">Pacific Data Hub</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Indikator Utama SDG</h4>
+                    <a href="#">SDG 11.5.1 — Affected Persons attributed to disasters</a>
+                    <a href="#">SDG 11.5.2 — Direct economic loss attributed to disasters</a>
+                    <a href="#">SDG 11.b.2 — Sendai Framework Strategy DRR adoption</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Indikator Lingkungan</h4>
+                    <a href="#">Pacific Population Growth (NMDI0002)</a>
+                    <a href="#">Global Surface Sea Temperature Anomalies</a>
+                    <a href="#">Ocean Sea Level Rising Trends</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>Dikembangkan khusus untuk tugas akhir Visualisasi Data &amp; Scrollytelling Kebencanaan</p>
+                <p style="margin-top: 0.5rem; opacity: 0.5;">Data diolah dari repositori terpadu Pacific Data Hub, UNDRR, dan Sendai Framework Monitor.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top Reset button -->
+    <button class="reset-btn" id="resetBtn" title="Kembalikan Tampilan Utama">↺</button>
+    <button class="audio-toggle-btn" id="audioToggleBtn" title="Aktifkan Musik Latar Lautan">🔊</button>
+
+    <!-- Modular Script Controller Entrypoint -->
+    <script type="module">
+        import { initOcean3D } from './ocean3d.js';
+        import { initPacificMap } from './map.js';
+        import { initDashboardCharts, initDashboardCore, updateStoryPanel } from './dashboard.js';
+        import { initOceanSynthesizer } from './audio.js';
+
+        // Initialize Lenis Smooth Scroll (Optimized configuration)
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+            mouseMultiplier: 0.95,
+            smoothTouch: false,
+            touchMultiplier: 1.5,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Bind Lenis updates to ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Run setup when DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Initialize GPU-optimized 3D Wave Canvas
+            try {
+                initOcean3D();
+            } catch (err) {
+                console.error("3D Wave Simulation failed to initialize:", err);
+            }
+
+            // 2. Initialize Interactive SVG Map and click handlers
+            try {
+                initPacificMap((countryName) => {
+                    const storySelect = document.getElementById('countryStorySelect');
+                    if (storySelect) {
+                        storySelect.value = countryName;
+                    }
+                    updateStoryPanel(countryName);
+                    
+                    // Scroll spotlight into viewport smoothly
+                    const targetPanel = document.getElementById('bab7');
+                    if (targetPanel) {
+                        lenis.scrollTo(targetPanel, { offset: -50, duration: 1.5 });
+                    }
+                });
+            } catch (err) {
+                console.error("Interactive SVG Map failed to initialize:", err);
+            }
+
+            // 3. Initialize Chart.js Instances
+            try {
+                initDashboardCharts();
+            } catch (err) {
+                console.error("Chart.js instances failed to initialize:", err);
+            }
+
+            // 4. Initialize Core User Interactions (Cursor, Scroll progress, Reset)
+            try {
+                initDashboardCore(lenis);
+            } catch (err) {
+                console.error("Core interactions failed to initialize:", err);
+            }
+
+            // 4b. Initialize Web Audio Ambient Wave Synthesizer
+            try {
+                initOceanSynthesizer();
+            } catch (err) {
+                console.error("Ambient Audio Synthesizer failed to initialize:", err);
+            }
+
+            // 5. Update spotlight panel default state (Fiji)
+            try {
+                updateStoryPanel('Fiji');
+            } catch (err) {
+                console.error("Spotlight default state failed to set:", err);
+            }
+
+            // 6. Navigation Indicator Dot Mapping
+            const sections = ['hero', 'prolog', 'bab1', 'bab2', 'bab3', 'bab4', 'bab5', 'bab6', 'bab7', 'epilog'];
+            const pageDots = document.querySelectorAll('.page-dot');
+
+            pageDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const target = document.getElementById(dot.dataset.target);
+                    if (target) lenis.scrollTo(target, { offset: -50 });
+                });
+            });
+
+            sections.forEach((id, i) => {
+                ScrollTrigger.create({
+                    trigger: '#' + id,
+                    start: 'top center',
+                    end: 'bottom center',
+                    onEnter: () => updatePageIndicator(i),
+                    onEnterBack: () => updatePageIndicator(i)
+                });
+            });
+
+            function updatePageIndicator(activeIndex) {
+                pageDots.forEach((dot, i) => {
+                    if (i === activeIndex) dot.classList.add('active');
+                    else dot.classList.remove('active');
+                });
+            }
+
+            // 7. Nav Links smooth anchor scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) lenis.scrollTo(target, { offset: -50 });
+                });
+            });
+
+            // 8. Entrance Animation Timeline using GSAP
+            gsap.to('.hero-eyebrow', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+            gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1.2, delay: 0.7, ease: 'power3.out' });
+            gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, delay: 1.1, ease: 'power3.out' });
+            gsap.to('.hero-stat', { 
+                opacity: 1, 
+                y: 0, 
+                scale: 1, 
+                duration: 0.8, 
+                stagger: 0.15, 
+                delay: 1.4, 
+                ease: 'back.out(1.5)', 
+                onComplete: startCountUp 
+            });
+            gsap.to('.hero-quote', { opacity: 1, duration: 1, delay: 2.6, ease: 'power3.out' });
+            gsap.to('.scroll-hint', { opacity: 1, duration: 1, delay: 3.2, ease: 'power3.out' });
+
+            // 9. Scroll Trigger Entrance Animations for story sections
+            document.querySelectorAll('.story-header').forEach(header => {
+                gsap.from(header, { 
+                    scrollTrigger: { trigger: header, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 0, 
+                    y: 40, 
+                    duration: 1.2, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.chart-wrap').forEach(chart => {
+                gsap.to(chart, { 
+                    scrollTrigger: { trigger: chart, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1.2, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.highlight-box').forEach(box => {
+                gsap.to(box, { 
+                    scrollTrigger: { trigger: box, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    x: 0, 
+                    duration: 1, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.chapter-card').forEach((card, i) => {
+                gsap.to(card, { 
+                    scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    delay: i * 0.1, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.history-item').forEach((item, i) => {
+                gsap.to(item, { 
+                    scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    delay: i * 0.08, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.story-panel').forEach(panel => {
+                gsap.to(panel, { 
+                    scrollTrigger: { trigger: panel, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1.2, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            document.querySelectorAll('.insight-card').forEach((card, i) => {
+                gsap.to(card, { 
+                    scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' }, 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    delay: i * 0.1, 
+                    ease: 'power3.out' 
+                });
+            });
+
+            // 10. Numerical Count Up Animation for Hero Section KPI counters
+            function startCountUp() {
+                document.querySelectorAll('.hero-stat-num').forEach(el => {
+                    const target = parseInt(el.dataset.target);
+                    const duration = 2000;
+                    const start = performance.now();
+                    function update(currentTime) {
+                        const elapsed = currentTime - start;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeProgress = 1 - Math.pow(1 - progress, 4);
+                        const current = Math.floor(easeProgress * target);
+                        
+                        if (target >= 1000000) {
+                            el.textContent = (current / 1000000).toFixed(1) + 'M';
+                        } else if (target >= 1000) {
+                            el.textContent = current.toLocaleString('id-ID');
+                        } else {
+                            el.textContent = current;
+                        }
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        } else {
+                            if (target >= 1000000) {
+                                el.textContent = (target / 1000000).toFixed(1) + 'M';
+                            } else {
+                                el.textContent = target.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                    requestAnimationFrame(update);
+                });
+            }
+
+            // 11. Count Up trigger for Counter section
+            ScrollTrigger.create({
+                trigger: '.counter-section',
+                start: 'top 85%',
+                onEnter: () => {
+                    document.querySelectorAll('.counter-value').forEach(el => {
+                        const target = parseInt(el.dataset.target);
+                        const duration = 1800;
+                        const start = performance.now();
+                        function update(currentTime) {
+                            const elapsed = currentTime - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const easeProgress = 1 - Math.pow(1 - progress, 3);
+                            el.textContent = Math.floor(easeProgress * target);
+                            if (progress < 1) {
+                                requestAnimationFrame(update);
+                            } else {
+                                el.textContent = target;
+                            }
+                        }
+                        requestAnimationFrame(update);
+                    });
+                },
+                once: true
+            });
+
+            // 12. Parallax scroll triggers
+            ScrollTrigger.create({
+                trigger: '.parallax-section',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+                onUpdate: (self) => {
+                    const bg = self.trigger.querySelector('.parallax-bg');
+                    if (bg) {
+                        bg.style.transform = `translate3d(0, ${self.progress * 20}%, 0)`;
+                    }
+                }
+            });
+
+            // 13. Hide Page Loading Screen
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader) loader.classList.add('hidden');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
