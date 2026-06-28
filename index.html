@@ -500,6 +500,30 @@
         </div>
     </section>
 
+    <!-- METHODOLOGY & ANALYTICAL INTEGRITY -->
+    <section class="story-section" id="methodology" style="border-top: 1px solid rgba(255,255,255,0.03); padding-top: 5rem;">
+        <div class="story-header" style="margin-bottom: 3.5rem;">
+            <span class="story-eyebrow">Methodology &amp; Scientific Integrity</span>
+            <h2 class="story-title" style="font-size: 2.2rem;">How We Engineered This Narrative</h2>
+            <p class="story-narrative" style="font-size: 0.95rem; max-width: 680px;">To ensure maximum academic credibility and precision, this visualization system incorporates specific data-journalistic practices, mathematical models, and performance optimizations:</p>
+        </div>
+        
+        <div class="chapter-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 2rem;">
+            <div class="chapter-card" style="padding: 2rem 1.5rem; text-align: left; opacity: 1; transform: none;">
+                <h4 style="font-family: var(--font-heading); color: var(--soft-aqua); margin-bottom: 0.8rem; font-size: 1.1rem;">1. Data Harmonization</h4>
+                <p style="font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6;">Indicators from the Sendai Framework Monitor and UNDRR are linked directly with the Pacific Data Hub (NMDI0002) population census. This allows us to scale affected ratios relative to regional population baselines.</p>
+            </div>
+            <div class="chapter-card" style="padding: 2rem 1.5rem; text-align: left; opacity: 1; transform: none;">
+                <h4 style="font-family: var(--font-heading); color: var(--coral-alert); margin-bottom: 0.8rem; font-size: 1.1rem;">2. Custom Spatial GIS</h4>
+                <p style="font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6;">Instead of embedding heavy, tracking-heavy mapping APIs, we engineered a custom lightweight SVG topology of the Pacific Islands. This ensures instant loading and precise coordinate mappings for low-bandwidth regions.</p>
+            </div>
+            <div class="chapter-card" style="padding: 2rem 1.5rem; text-align: left; opacity: 1; transform: none;">
+                <h4 style="font-family: var(--font-heading); color: var(--gold-loss); margin-bottom: 0.8rem; font-size: 1.1rem;">3. WebGL Acceleration</h4>
+                <p style="font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6;">The background ocean wave simulation runs on a highly optimized Three.js vertex shader, utilizing a reduced vertex mesh. This allows GPU hardware acceleration to maintain 60fps even on mobile devices.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- FINAL PARALLAX -->
     <div class="parallax-section" style="height: 50vh;">
         <div class="parallax-bg" style="background: linear-gradient(135deg, #06384a, #031c26, #020f14);"></div>
@@ -542,15 +566,13 @@
     </footer>
 
     <!-- Back to top Reset button -->
-    <button class="reset-btn" id="resetBtn" title="Kembalikan Tampilan Utama">↺</button>
-    <button class="audio-toggle-btn" id="audioToggleBtn" title="Aktifkan Musik Latar Lautan">🔊</button>
+    <button class="reset-btn" id="resetBtn" title="Reset Dashboard State">↺</button>
 
     <!-- Modular Script Controller Entrypoint -->
     <script type="module">
         import { initOcean3D } from './ocean3d.js';
         import { initPacificMap } from './map.js';
         import { initDashboardCharts, initDashboardCore, updateStoryPanel } from './dashboard.js';
-        import { initOceanSynthesizer } from './audio.js';
 
         // Initialize Lenis Smooth Scroll (Optimized configuration)
         const lenis = new Lenis({
@@ -621,12 +643,7 @@
                 console.error("Core interactions failed to initialize:", err);
             }
 
-            // 4b. Initialize Web Audio Ambient Wave Synthesizer
-            try {
-                initOceanSynthesizer();
-            } catch (err) {
-                console.error("Ambient Audio Synthesizer failed to initialize:", err);
-            }
+
 
             // 4c. Connect Hover Event for 3D Wave Storm morphing
             try {

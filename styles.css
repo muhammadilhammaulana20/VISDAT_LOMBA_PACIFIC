@@ -1466,57 +1466,7 @@ footer::before {
     box-shadow: 0 4px 15px rgba(14, 138, 138, 0.3);
 }
 
-/* ===================== AMBIENT AUDIO FLOATING TOGGLE ===================== */
-.audio-toggle-btn {
-    position: fixed;
-    bottom: 2.5rem;
-    left: 2.5rem;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: rgba(3, 28, 38, 0.6);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--soft-aqua);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 999;
-    font-size: 1.1rem;
-}
 
-.audio-toggle-btn:hover {
-    transform: scale(1.15);
-    border-color: var(--pacific-teal);
-    color: var(--sand-white);
-    box-shadow: 0 10px 40px rgba(14, 138, 138, 0.3);
-}
-
-.audio-toggle-btn.active {
-    background: linear-gradient(135deg, var(--pacific-teal), rgba(14, 138, 138, 0.8));
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 8px 30px rgba(14, 138, 138, 0.4);
-    animation: pulseAudio 2s infinite;
-}
-
-@keyframes pulseAudio {
-    0% { box-shadow: 0 0 0 0 rgba(14, 138, 138, 0.5); }
-    70% { box-shadow: 0 0 0 12px rgba(14, 138, 138, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(14, 138, 138, 0); }
-}
-
-@media (max-width: 768px) {
-    .audio-toggle-btn {
-        bottom: 1.5rem;
-        left: 1.5rem;
-        width: 48px;
-        height: 48px;
-    }
-}
 
 /* ===================== HERO HOVER REVEAL CONTAINER ===================== */
 .hero-reveal-container {
