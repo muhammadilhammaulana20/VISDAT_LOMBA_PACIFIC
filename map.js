@@ -222,21 +222,21 @@ export function initPacificMap(onCountrySelect) {
             let dataValueHtml = '';
             if (currentMode === 'affected') {
                 dataValueHtml = `
-                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Orang Terdampak</div>
-                    <div style="font-size: 14px; font-weight: 800; color: #FF6B4A;">${country.affected.toLocaleString('id-ID')} jiwa</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">People Affected</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #FF6B4A;">${country.affected.toLocaleString('en-US')}</div>
                 `;
             } else if (currentMode === 'economic') {
                 dataValueHtml = `
-                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Kerugian Ekonomi</div>
-                    <div style="font-size: 14px; font-weight: 800; color: #D9A441;">$${(country.economic/1000000).toFixed(1)} juta USD</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Economic Loss</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #D9A441;">$${(country.economic/1000000).toFixed(1)} Million USD</div>
                 `;
             } else if (currentMode === 'climate') {
                 const isAtoll = ["Marshall Islands", "Tuvalu", "Kiribati", "Nauru"].includes(country.name);
                 const vuln = isAtoll 
-                    ? '<span style="color:#FF6B4A; font-weight:bold;">Sangat Kritis (Atoll Rendah)</span>' 
-                    : '<span style="color:#3E8F5A; font-weight:bold;">Sedang (Vulkanik Tinggi)</span>';
+                    ? '<span style="color:#FF6B4A; font-weight:bold;">Highly Critical (Low-lying Atoll)</span>' 
+                    : '<span style="color:#3E8F5A; font-weight:bold;">Moderate (High Volcanic)</span>';
                 dataValueHtml = `
-                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Ancaman Kenaikan Muka Air Laut</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Sea Level Rise Threat</div>
                     <div style="font-size: 12.5px; font-weight: bold; margin-top: 2px;">Status: ${vuln}</div>
                 `;
             }
