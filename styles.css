@@ -659,7 +659,7 @@ nav.scrolled {
     padding: 2.2rem;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 12px;
     position: relative;
     transition: background 0.4s, border-color 0.4s, transform 0.4s;
 }
@@ -1361,18 +1361,26 @@ footer::before {
     .page-indicator {
         display: none;
     }
-    .history-item {
-        flex-direction: column !important;
-    }
-    .history-content {
-        width: 100%;
-        margin-top: 1.5rem;
-    }
     .history-timeline::before {
         left: 20px;
+        transform: none;
+    }
+    .history-item {
+        flex-direction: column !important;
+        padding-left: 45px;
+        margin-bottom: 3.5rem;
+    }
+    .history-content {
+        width: 100% !important;
+        margin-top: 0 !important;
     }
     .history-dot {
         left: 20px !important;
+        transform: translateX(-50%);
+        top: 2.2rem;
+    }
+    .history-item > div:not([class]) {
+        display: none !important;
     }
     nav {
         padding: 1.2rem 2rem;
